@@ -1,0 +1,3 @@
+echo "Extracting $1 to fastq files"
+~/software/sratoolkit.2.3.5-2-centos_linux64/bin/fastq-dump $1 --split-files
+

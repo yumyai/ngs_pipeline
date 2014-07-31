@@ -1,0 +1,6 @@
+echo "Download SRA $1 to directory $2"
+~/.aspera/connect/bin/ascp \
+-i /storage/home/pitithat.pur/.aspera/connect/etc/asperaweb_id_dsa.openssh \
+-k1 -Tr -l150m \
+anonftp@ftp.ncbi.nlm.nih.gov:$1 \
+$2
