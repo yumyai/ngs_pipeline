@@ -24,15 +24,9 @@ export target_region=$HOME/colorectal_study/exon_target/SureSelectHMExonV4_UTR.b
 export ref_genome=$HOME/colorectal_study/ref_genome/ucsc.hg19.fasta
 
 
-if [ ! -d "$alignment_dir/$1" ]; then
-  echo "Create new directory $alignment_dir/$1"
-  mkdir "$alignment_dir/$1"
-fi
+mkdir -p "$alignment_dir/$1"
 
-if [ ! -d "$realign_dir/$1" ]; then
-  echo "Create New Directory $realign_dir/$1"
-  mkdir "$realign_dir/$1"
-fi
+mkdir -p "$realign_dir/$1"
 
 if [ ! -d "$baseRecal_dir/$1" ]; then
   echo "Create New Directory $baseRecal_dir/$1"
