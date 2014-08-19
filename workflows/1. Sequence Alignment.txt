@@ -1,0 +1,24 @@
+
+1. download reference hg19 from
+
+ftp.broadinstitute.org
+
+Username : gsapubftp-anonymous
+PASSWORD : NONE
+
+bundle/2.8/hg19
+
+2. Create the index for the reference genome
+   
+> bwa index -p hg19bwaidx -a bwtsw wg_hg19.fa
+
+3. Align raw reads on reference genome
+   (t : Number of thread)
+
+> bwa aln -t 3 hg19bwaidx raw_read/pilot3_1.fastq.gz > pilot3_1.sai
+   
+> bwa aln -t 3 hg19bwaidx raw_read/pilot3_2.fastq.gz > pilot3_2.sai
+
+
+4.  Create alignment in the SAM format in BAM
+> bwa sampe hg19bwaidx pilot3_1.sai pilot3_2.sai raw_read/pilot3_1.fastq.gz raw_read/pilot3_2.fastq.gz | samtools view -bSu - | samtools sort - pilot3

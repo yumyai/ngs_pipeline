@@ -1,0 +1,95 @@
+1. Variant Recalibrate SNPs
+	
+> java -Xmx4G -jar local/bin/GenomeAnalysisTK.jar \
+
+	-T VariantRecalibrator \
+
+	-R chulabhorn_seq/ref_genome/ucsc.hg19.fasta \
+
+	-input chulabhorn_seq/variant_call_result/pilot3.snps.vcf \
+
+	-resource:hapmap,known=false,training=true,truth=true,prior=15.0 chulabhorn_seq/knownsites/hapmap_3.3.hg19.vcf \
+
+	-resource:omni,known=false,training=true,truth=true,prior=12.0 chulabhorn_seq/knownsites/1000G_omni2.5.hg19.vcf \
+
+	-resource:1000G,known=false,training=true,truth=false,prior=10.0 chulabhorn_seq/knownsites/1000G_phase1.snps.high_confidence.hg19.vcf \
+
+	-resource:dbsnp,known=true,training=false,truth=false,prior=2.0 chulabhorn_seq/knownsites/dbsnp_138.hg19.vcf \
+
+	-an QD -an MQ -an MQRankSum -an ReadPosRankSum -an FS \
+
+	-mode SNP \
+
+	-recalFile chulabhorn_seq/variant_recalibrate_result/raw.SNPs.recal \
+
+	-tranchesFile chulabhorn_seq/variant_recalibrate_result/raw.SNPs.tranches \
+
+	-rscriptFile chulabhorn_seq/variant_recalibrate_result/recal.SNPs.plots.R \
+
+	-nt 4
+2. Variant Recalibrate INDELs
+> java -Xmx4G -jar local/bin/GenomeAnalysisTK.jar \
+
+	-T VariantRecalibrator \
+
+	-R chulabhorn_seq/ref_genome/ucsc.hg19.fasta \
+
+	-input chulabhorn_seq/variant_call_result/pilot3.indels.vcf \
+
+	-resource:mills,known=false,training=true,truth=true,prior=12.0 chulabhorn_seq/knownsites/Mills_and_1000G_gold_standard.indels.hg19.vcf \
+
+	-resource:dbsnp,known=true,training=false,truth=false,prior=2.0 chulabhorn_seq/knownsites/dbsnp_138.hg19.vcf \
+	-an QD -an FS -an ReadPosRankSum -an MQRankSum \
+
+	-mode INDEL \
+
+	--maxGaussians 4 \
+
+	-recalFile chulabhorn_seq/variant_recalibrate_result/raw.INDELs.recal \
+
+	-tranchesFile chulabhorn_seq/variant_recalibrate_result/raw.INDELs.tranches \
+
+	-rscriptFile chulabhorn_seq/variant_recalibrate_result/recal.INDELs.plots.R \
+
+3. ApplyRecalibration SNPs
+	
+> java -Xmx4G -jar local/bin/GenomeAnalysisTK.jar \
+
+	-T ApplyRecalibration \
+
+	-R chulabhorn_seq/ref_genome/ucsc.hg19.fasta \
+
+	-input chulabhorn_seq/variant_call_result/pilot3.snps.vcf \
+
+	-mode SNP \
+
+	-recalFile chulabhorn_seq/variant_recalibrate_result/raw.SNPs.recal \
+
+	-tranchesFile chulabhorn_seq/variant_recalibrate_result/raw.SNPs.tranches \
+
+	-o chulabhorn_seq/variant_recalibrate_result/pilot3.recal.SNPs.vcf \
+
+	-ts_filter_level 99.5
+	
+
+
+
+4. ApplyRecalibration INDELs
+
+	java -Xmx4G -jar local/bin/GenomeAnalysisTK.jar \
+
+	-T ApplyRecalibration \
+
+	-R chulabhorn_seq/ref_genome/ucsc.hg19.fasta \
+
+	-input chulabhorn_seq/variant_call_result/pilot3.indels.vcf \
+
+	-mode INDEL \
+
+	-recalFile chulabhorn_seq/variant_recalibrate_result/raw.INDELs.recal \
+
+	-tranchesFile chulabhorn_seq/variant_recalibrate_result/raw.INDELs.tranches \
+
+	-o chulabhorn_seq/variant_recalibrate_result/pilot3.recal.INDELs.vcf \
+
+	-ts_filter_level 99.0

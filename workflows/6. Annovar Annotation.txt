@@ -1,0 +1,23 @@
+Download
+ http://www.openbioinformatics.org/annovar/download/Ht8qRwQSTi/annovar.latest.tar.gz
+
+1. download annotation database
+   > 
+   annotate_variation.pl -downdb -buildver hg19 -webfrom annovar refGene humandb/
+   annotate_variation.pl -downdb 1000g2012apr humandb -buildver hg19
+   annotate_variation.pl -build hg19 -downdb phastConsElements46way humandb/
+   annotate_variation.pl -downdb -buildver hg19 -webfrom annovar snp138 /usr/local/lib/annovar/humandb
+   annotate_variation.pl -downdb -webfrom annovar -build hg19 esp6500si_all humandb/
+   annotate_variation.pl -build hg19 -downdb genomicSuperDups humandb/
+   annotate_variation.pl -downdb -buildver hg19 -webfrom annovar snp138NonFlagged humandb
+   annotate_variation.pl -downdb -buildver hg19 -webfrom annovar cosmic68 humandb/
+   
+2. Convert to annovar input file format
+   convert2annovar.pl \
+   -format vcf4 chulabhorn_seq/variant_recalibrate_result/pilot3.recal.SNPs.vcf > chulabhorn_seq/variant_recalibrate_result/pilot3.recal.SNPs.avinput
+   convert2annovar.pl \
+   -format vcf4 chulabhorn_seq/variant_recalibrate_result/pilot3.recal.INDELs.vcf > chulabhorn_seq/variant_recalibrate_result/pilot3.recal.INDELs.avinput
+3.Annotate via variants_reduction script
+ > variants_reduction.pl ~/chulabhorn_seq/variant_recalibrate_result/pilot3.recal.SNPs.avinput ~/software/annovar/humandb/ -protocol nonsyn_splicing,genomicSuperDups,phastConsElements46way,1000g2012apr_asn,esp6500si_all,snp138NonFlagged,cosmic68 -operation g,rr,r,f,f,f,f -out pilot3_SNPs -buildver hg19
+ > variants_reduction.pl ~/chulabhorn_seq/variant_recalibrate_result/pilot3.recal.INDELs.avinput ~/software/annovar/humandb/ -protocol nonsyn_splicing,genomicSuperDups,phastConsElements46way,1000g2012apr_asn,esp6500si_all,snp138NonFlagged,cosmic68 -operation g,rr,r,f,f,f,f -out pilot3_INDELs -buildver hg19
+ 

@@ -1,0 +1,14 @@
+1. Download Picard
+> wget http://downloads.sourceforge.net/project/picard/picard-tools/1.115/picard-tools-1.115.zip
+> unzip picard.tools-1.115.zips
+
+2. Create temp directory
+> mkdir tmp
+
+3. Sort sam by coordinate
+> java -Xmx4g -jar /usr/local/lib/picard/SortSam.jar INPUT=pilot3.bam OUTPUT=pilot3.sorted.bam \
+  SO=coordinate VALIDATION_STRINGENCY=SILENT -TMP_DIR=./tmp
+
+4. Picard - Remove PCR Duplication
+> java -Xmx4g -jar /usr/local/lib/picard/MarkDuplicates.jar INPUT=pilot3.sorted.bam OUTPUT=pilot3.sorted.rmdup.bam \
+  METRICS_FILE=dup.txt VALIDATION_STRINGENCY=LENIENT REMOVE_DUPLICATES=true

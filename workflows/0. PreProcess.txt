@@ -1,0 +1,45 @@
+1. Download Reference Genome and Assoicated file
+from GATK Bundle
+
+> mkdir ref_genome
+> cd ref_genome
+
+FTP Server :ftp.broadinstitute.org
+
+Username : gsapubftp-anonymous
+PASSWORD : NONE
+
+> ftp
+> open ftp.broadinstitute.org
+> cd bundle/2.8/hg19
+> get ucsc.hg19.fasta.gz
+> get ucsc.hg19.fasta.fai.gz
+> get ucsc.hg19.dict.gz
+
+2. download knownsite
+Onlocal computer
+> mkdir knownsites
+> cd knownsites
+
+ftp 
+> get 1000G_omni2.5.hg19.vcf.gz
+> get 1000G_omni2.5.hg19.vcf.idx.gz
+> get 1000G_phase1.indels.hg19.vcf.gz
+> get 1000G_phase1.indels.hg19.vcf.idx.gz
+> get 1000G_phase1.snps.high_confidence.hg19.vcf.gz
+> get 1000G_phase1.snps.high_confidence.hg19.vcf.idx.gz
+> get dbsnp_138.hg19.vcf.gz
+> get dbsnp_138.hg19.vcf.idx.gz
+> get hapmap_3.3.hg19.vcf.gz
+> get hapmap_3.3.hg19.vcf.idx.gz
+> get Mills_and_1000G_gold_standard.indels.hg19.vcf.gz
+> get Mills_and_1000G_gold_standard.indels.hg19.vcf.idx.gz
+
+3. Unzip all knownsites
+gzip -d _.gz
+
+4. Download Target region (exome)
+   > mkdir exome_target
+   > cd exome_target
+   > wget http://www.nimblegen.com/downloads/annotation/ez_exome_v3/SeqCapEZ_Exome_v3.0_Design_Annotation_files.zip
+   > gunzip SeqCapEZ_Exome_v3.0_Design_Annotation_files

@@ -1,0 +1,47 @@
+1. Add read groups in bam
+   >java -jar /usr/local/lib/picard/AddOrReplaceReadGroups.jar \
+   I=pilot3.sorted.rmdup.bam O=pilot3.sorted.rmdup.readgroup.bam \
+   RGID=pilot3 RGLB=CGATGT RGPL=illumina RGSM=patient RGPU=C3W95ACXX VALIDATION_STRINGENCY=SILENT
+
+2. Index bam
+   >samtools index pilot3.sorted.rmdup.readgroup.bam
+
+3. Create intervals : Collect regions around potential indels and clusters of mismatches
+   >  java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+   -T RealignerTargetCreator -R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+   -I chulaporn_seq/alignment_resilt/pilot3.sorted.rmdup.readgroup.bam \
+   -o chulaporn_seq/local_realign_result/interval_forRealign.pilot3 \
+   -nt 5 \
+   -known chulaporn_seq/knownsites/Mills_and_1000G_gold_standard.indels.hg19.vcf \
+   -known chulaporn_seq/knownsites/1000G_phase1.indels.hg19.vcf
+
+4. Realigner over the intervals to cleaned version of the BAM file
+   > java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+   -I chulaporn_seq/alignment_resilt/pilot3.sorted.rmdup.readgroup.bam \
+   -R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+   -T IndelRealigner \
+   -targetIntervals chulaporn_seq/local_realign_result/pilot3.interval.intervals \
+   --out chulaporn_seq/local_realign_result/pilot3.realigned.bam \
+   -known chulaporn_seq/knownsites/Mills_and_1000G_gold_standard.indels.hg19.vcf \
+   -known chulaporn_seq/knownsites/1000G_phase1.indels.hg19.vcf \
+   -L chulaporn_seq/exon_target/SeqCap_EZ_Exome_v3_primary.bed
+
+5. Determine the covariates affecting base quality scores in BAM
+>  java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+   -T BaseRecalibrator \
+   -I chulaporn_seq/local_realign_result/pilot3.realigned.bam \
+   -R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+   -o chulaporn_seq/baseRecalibrate_result/pilot3.recalibrate_report.grp \
+   -knownSites chulaporn_seq/knownsites/1000G_phase1.indels.hg19.vcf \
+   -knownSites chulaporn_seq/knownsites/Mills_and_1000G_gold_standard.indels.hg19.vcf \
+   -knownSites chulaporn_seq/knownsites/dbsnp_138.hg19.vcf \
+   -L chulaporn_seq/exon_target/SeqCap_EZ_Exome_v3_primary.bed
+
+6. Create recalibration BAM
+   >  java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+   -T PrintReads \
+   -R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+   -I chulaporn_seq/local_realign_result/pilot3.realigned.bam \
+   -BQSR chulaporn_seq/baseRecalibrate_result/pilot3.recalibrate_report.grp \
+   -o chulaporn_seq/baseRecalibrate_result/pilot3.realigned.recal.bam \
+   -L chulaporn_seq/exon_target/SeqCap_EZ_Exome_v3_primary.bed

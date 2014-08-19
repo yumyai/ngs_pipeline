@@ -1,0 +1,27 @@
+1. Call SNPss
+	> java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+	-T UnifiedGenotyper \
+	-glm SNP \
+	-R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+	-I chulaporn_seq/baseRecalibrate_result/pilot3.realigned.recal.bam \
+	-o chulaporn_seq/variant_call_result/pilot3.snps.vcf \
+	-stand_call_conf 30.0 \
+	-stand_emit_conf 10.0 \
+	-nt 4 \
+	--dbsnp chulaporn_seq/knownsites/dbsnp_138.hg19.vcf \
+	-L chulaporn_seq/exon_target/SeqCap_EZ_Exome_v3_primary.bed
+
+
+2. Call Indels
+	> java -Xmx4G -jar gatk/GenomeAnalysisTK.jar \
+	-T UnifiedGenotyper \
+	-glm INDEL \
+	-R chulaporn_seq/ref_genome/ucsc.hg19.fasta \
+	-I chulaporn_seq/baseRecalibrate_result/pilot3.realigned.recal.bam \
+	-o chulaporn_seq/variant_call_result/pilot3.indels.vcf \
+	-stand_call_conf 30.0 \
+	-stand_emit_conf 10.0 \
+	-nt 4 \
+	--dbsnp chulaporn_seq/knownsites/dbsnp_138.hg19.vcf \
+	-L chulaporn_seq/exon_target/SeqCap_EZ_Exome_v3_primary.bed
+
